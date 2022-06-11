@@ -6,7 +6,7 @@ from .forms import *
 from .models import *
 from django.views.generic.edit import View
 from django.contrib import messages
-from django.views.generic import CreateView
+from django.views.generic import ListView,CreateView
 from django.contrib.auth import authenticate,login,logout
 # Create your views here.
 
@@ -47,3 +47,29 @@ class SignOutView(View):
   def get(self,request):
     logout(request)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+  
+class CreateProfileView(CreateView):
+  model = Profile
+  form_class = CreateProfileForm
+  template_name = 'create_profile.html'
+  
+  def form_valid(self,form):
+    form.instance.user = self.request.user
+    return super().form_valid(form)
+  
+def profile(request,id):
+  user = request.user
+  profiles=Profile.objects.get(user=id)
+  context = {'profiles':profiles}
+  return render(request, 'profile.html', context)
+      
+
+def updateProfile(request,id):
+  profile = Profile.objects.get(user=id)
+  form = UpdateProfileForm(request.POST,request.FILES,instance=profile)
+  if request.method == 'POST':
+    if form.is_valid():
+      form.save()
+      return redirect('profile',id)
+  context = {'form':form}
+  return render(request,'update_profile.html',context)
