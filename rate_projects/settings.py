@@ -164,6 +164,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+cloudinary.config( 
+  cloud_name = "dtqnkzj6q", 
+  api_key = "897699858178261", 
+  api_secret = "NsUxBmUCiYvEfB6GnQi8_WqSipU" 
+)
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('cloud_name', default=""),
     'API_KEY': config('api_key', default=""),
@@ -174,3 +179,6 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
+
+LOGIN_REDIRECT_URL = ''
+LOGOUT_REDIRECT_URL = '/'
