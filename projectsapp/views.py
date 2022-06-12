@@ -8,10 +8,19 @@ from django.views.generic.edit import View
 from django.contrib import messages
 from django.views.generic import ListView,CreateView
 from django.contrib.auth import authenticate,login,logout
+from django.db.models import Q
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializer import *
+from rest_framework import status
 # Create your views here.
 
 def home(request):
-  return render(request, 'index.html')
+  projects = Project.objects.all()
+  ratings = Rating.objects.all()
+  # projects = request.get('127.0.0.1/api/profiles/').json()
+  context = {'projects':projects,'ratings':ratings}
+  return render(request, 'index.html',context)
 
 def signup(request):
   if request.method == 'POST':
@@ -46,7 +55,8 @@ def signin(request):
 class SignOutView(View):
   def get(self,request):
     logout(request)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('index')
   
 class CreateProfileView(CreateView):
   model = Profile
@@ -73,3 +83,50 @@ def updateProfile(request,id):
       return redirect('profile',id)
   context = {'form':form}
   return render(request,'update_profile.html',context)
+
+def uploadProject(request,id):
+  profile = Profile.objects.get(user=id)
+  user = request.user
+  u_form = ProjectUploadForm(request.POST,request.FILES)
+  print('no')
+  if request.method == 'POST':
+    if u_form.is_valid():    
+      name = u_form.cleaned_data.get('name') 
+      description = u_form.cleaned_data.get('description')
+      poster = u_form.cleaned_data.get('poster') 
+      # languages = u_form.request.GET('languages') 
+      new_project = Project(name=name,description=description,poster=poster,user=profile)
+      new_project.save()
+      return redirect('index')
+  context = {'form':u_form}
+  return render(request,'project_upload.html',context)
+
+class search_user(ListView):
+  model= User,Profile
+  template_name = 'user_search.html'
+  
+  def get_queryset(self):
+    query = self.request.GET.get('search_user')
+    object_list = User.objects.filter(
+      Q(username__icontains=query)
+    
+    )
+    # if not search_user
+    return object_list
+  
+class ProfileList(APIView):
+  def get(self, request, format=None):
+    all_profiles = Profile.objects.all()
+    serializers = ProfileSerializer(all_profiles, many=True)
+    print(serializers.data)
+    profiles = serializers.data
+    # return render(request, 'index.html',{'profiles':profiles})
+    return Response(serializers.data)
+  
+  
+  def post(self, request, format=None):
+    serializers = ProfileSerializer(data=request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_201_OK)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
