@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
-from projectsapp.models import Profile
+from projectsapp.models import Profile, Project
 
 
 class SignUpForm(UserCreationForm):
@@ -35,3 +35,21 @@ class UpdateProfileForm(forms.ModelForm):
   class Meta:
     model = Profile
     fields = ['name','country','avatar','bio']
+    
+class ProjectUploadForm(forms.Form):
+  name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Project Name'})) 
+  description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control','placeholder': 'Describe your project...'}))  
+  LANGUAGES = [
+    ('HTML','html'),
+    ('CSS','css'),
+    ('JAVASCRIPT','javascript'),
+    ('ANGULAR','angular'),
+    ('FLASK','flask'),
+    ('DJANGO','django'),
+          
+  ]
+  language = forms.ChoiceField(choices=LANGUAGES)
+  poster =forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control','placeholder':'Upload File'}))
+  class Meta:
+    model = Project
+    fields =['name','description','poster','language']
