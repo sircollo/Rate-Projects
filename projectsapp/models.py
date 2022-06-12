@@ -26,25 +26,19 @@ class Profile(models.Model):
 class Project(models.Model):
   name = models.CharField(max_length=30)
   description = models.TextField()
-  HTML = 'HT'
-  CSS = 'CS'
-  JAVASCRIPT = 'JS'
-  ANGULAR = 'AG'
-  FLASK = 'FL'
-  DJANGO = 'DJ'
   LANGUAGES = [
-    (HTML,'html'),
-    (CSS,'css'),
-    (JAVASCRIPT,'javascript'),
-    (ANGULAR,'angular'),
-    (FLASK,'flask'),
-    (DJANGO,'django'),
+    ('HTML','html'),
+    ('CSS','css'),
+    ('JAVASCRIPT','javascript'),
+    ('ANGULAR','angular'),
+    ('FLASK','flask'),
+    ('DJANGO','django'),
           
   ]
-  languages = models.CharField(
+  language = models.CharField(
     max_length=30,
     choices= LANGUAGES,
-    default= HTML,
+    default= 'HTML'
   )
   poster = cloudinary.models.CloudinaryField('image',default='image')
   upload_date = models.DateTimeField(auto_now_add=True)
