@@ -23,6 +23,20 @@ class Profile(models.Model):
   def get_absolute_url(self):
     return reverse('index')
   
+class Category(models.Model):
+  NAMES = [
+    ('TECHNOLOGY', 'TECHNOLOGY'),
+    ('SOCIAL', 'SOCIAL'),
+    ('NEWS', 'NEWS'),
+    ('SPORTS', 'SPORTS'),
+    ('FASHION', 'FASHION'),
+
+  ]
+  name = models.CharField(choices=NAMES,max_length=30,default='TECHNOLOGY')
+  
+  def __str__(self):
+    return self.name
+  
 class Project(models.Model):
   name = models.CharField(max_length=30)
   description = models.TextField()
@@ -42,9 +56,37 @@ class Project(models.Model):
   )
   poster = cloudinary.models.CloudinaryField('image',default='image')
   upload_date = models.DateTimeField(auto_now_add=True)
+  category = models.ManyToManyField(Category, related_name='projects')
   user = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True,related_name='project')
-  
+  url = models.URLField(max_length=300,default='/',blank=True)
   def __str__(self):
     return self.name
+  
+class Rating(models.Model):
+  comment = models.TextField()
+  project = models.ForeignKey(Project,on_delete=models.CASCADE, related_name='ratings')
+  user = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='ratings')
+  rating_date = models.DateTimeField(auto_now_add=True)
+  RATINGS = [
+    (1, '1'),
+    (2, '2'),
+    (3, '3'),
+    (4, '4'),
+    (5, '5'),
+    (6, '6'),
+    (7, '7'),
+    (8, '8'),
+    (9, '9'),
+    (10, '10'),
+  ]
+  design = models.IntegerField(choices=RATINGS,default=0,blank=True)
+  usability = models.IntegerField(choices=RATINGS,default=0,blank=True)
+  content = models.IntegerField(choices=RATINGS,default=0,blank=True)
+  design_average = models.FloatField(default=0)
+  usability_average = models.FloatField(default=0)
+  content_average = models.FloatField(default=0)
+  
+  def __str__(self):
+    return self.comment
   
   
