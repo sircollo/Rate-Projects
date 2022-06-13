@@ -18,6 +18,7 @@ from rest_framework import status
 def home(request):
   projects = Project.objects.all()
   ratings = Rating.objects.all()
+  
   # projects = request.get('127.0.0.1/api/profiles/').json()
   context = {'projects':projects,'ratings':ratings}
   return render(request, 'index.html',context)
@@ -130,3 +131,28 @@ class ProfileList(APIView):
       serializers.save()
       return Response(serializers.data,status=status.HTTP_201_OK)
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+def review(request,id):
+  user = request.user
+  # profiles = Profile.objects.get(user=id)
+  # print(profiles)
+  project = Project.objects.get(id=id)
+  user = Profile.objects.get(user=user)
+  ratings = Rating.objects.get(project=project)
+  form = ProjectRatingForm(request.POST)
+  if request.method == 'POST':
+    if form.is_valid():
+      design = form.cleaned_data['design']
+      usability = form.cleaned_data['usability']
+      content = form.cleaned_data['content']
+      comment = form.cleaned_data['comment']  
+      da = float(design)
+      x = (da/10)    
+      new_rating = Rating(design=design,usability=usability,content=content,comment=comment,user=user,project=project,design_average=x)
+      new_rating.save()
+      
+      return redirect('index')
+  context = {'form':form,'project':project,'user':user,'ratings':ratings}
+  # return render(request,'review.html',context)
+  return render(request,'single_project.html',context)
