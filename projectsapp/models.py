@@ -59,8 +59,50 @@ class Project(models.Model):
   category = models.ManyToManyField(Category, related_name='projects')
   user = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True,related_name='project')
   url = models.URLField(max_length=300,default='/',blank=True)
+  
   def __str__(self):
     return self.name
+  
+  def total_ratings(self):
+    ratings = Rating.objects.filter(project=self)
+    return len(ratings)
+  
+  def design_average(self):
+    sum = 0
+    ratings = Rating.objects.filter(project=self)
+    for rating in ratings:
+      sum += rating.design
+      
+    if len(ratings) > 0:
+      return sum / len(ratings)
+    else:
+      return 0
+    
+  def usability_average(self):
+    sum = 0
+    ratings = Rating.objects.filter(project=self)
+    for rating in ratings:
+      sum += rating.usability
+      
+    if len(ratings) > 0:
+      return sum / len(ratings)
+    else:
+      return 0
+    
+  def content_average(self):
+    sum = 0
+    ratings = Rating.objects.filter(project=self)
+    for rating in ratings:
+      sum += rating.content
+      
+    if len(ratings) > 0:
+      return sum / len(ratings)
+    else:
+      return 0
+    
+    
+  
+
   
 class Rating(models.Model):
   comment = models.TextField()
@@ -82,9 +124,9 @@ class Rating(models.Model):
   design = models.IntegerField(choices=RATINGS,default=0,blank=True)
   usability = models.IntegerField(choices=RATINGS,default=0,blank=True)
   content = models.IntegerField(choices=RATINGS,default=0,blank=True)
-  design_average = models.FloatField(default=0)
-  usability_average = models.FloatField(default=0)
-  content_average = models.FloatField(default=0)
+  design_average = models.FloatField(default=0,blank=True)
+  usability_average = models.FloatField(default=0,blank=True)
+  content_average = models.FloatField(default=0,blank=True)
   
   def __str__(self):
     return self.comment
