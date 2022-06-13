@@ -1,5 +1,5 @@
 import email
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render,redirect,reverse,HttpResponseRedirect
 from django.shortcuts import render
 from .forms import *
@@ -13,12 +13,17 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializer import *
 from rest_framework import status
+from .permissions import IsAdminOrReadOnly
+import requests
 # Create your views here.
 
 def home(request):
   projects = Project.objects.all()
   ratings = Rating.objects.all()
-  
+  url = 'http://127.0.0.1:8000/api/projects/'
+  response = requests.get(url)
+  projects = response.json()
+  print(projects)
   # projects = request.get('127.0.0.1/api/profiles/').json()
   context = {'projects':projects,'ratings':ratings}
   return render(request, 'index.html',context)
@@ -158,10 +163,44 @@ def review(request,id):
   return render(request,'single_project.html',context)
 
 class ProjectList(APIView):
+  # permission_classes = (IsAdminOrReadOnly,)
   def get(self, request, format=None):
     all_projects = Project.objects.all()
     serializers = ProjectsSerializer(all_projects,many=True)
     return Response(serializers.data)
+  
+  def post(self, request, format=None):
+    serializers = ProjectsSerializer(data=request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_200_OK)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class ProjectDetail(APIView): 
+  def get_project(self,pk):
+    try:
+      return Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+      return Http404
+    
+  def get(self, request, pk, format=None):
+    project = self.get_project(pk)
+    serializers = ProjectsSerializer(project)
+    return Response(serializers.data,status=status.HTTP_200_OK)
+  # permission_classes = (IsAdminOrReadOnly,)
+  def put(self, request, pk, format=None):
+    project = self.get_project(pk)
+    serializers = ProjectsSerializer(project,request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_200_OK)
+    else:
+      return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+    
+  def delete(self, request, pk, format=None):
+    project = self.get_project(pk)
+    project.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
   
 class RatingList(APIView):
   def get(self,request,format=None):
