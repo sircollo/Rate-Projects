@@ -15,7 +15,12 @@ urlpatterns = [
     url('^upload-project/(\d+)', views.uploadProject, name='upload'),
     path('search/', search_user.as_view(), name='search'),
     url('^api/profiles/', views.ProfileList.as_view(), name='api-profiles'),
-    url(r'^api-token-auth/', obtain_auth_token)
+    url(r'^api-token-auth/', obtain_auth_token),
+    url('review/(\d+)', views.review, name='review'),
+    url('^api/projects/', views.ProjectList.as_view(), name='api-projects'),
+    url('^api/ratings/', views.RatingList.as_view(), name='ratings'),
+    url('^api/project/(\d+)/', views.ProjectDetail.as_view(), name='details'),
+    
 ]
 if settings.DEBUG:
     urlpatterns+= static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
