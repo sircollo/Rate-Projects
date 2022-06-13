@@ -156,3 +156,15 @@ def review(request,id):
   context = {'form':form,'project':project,'user':user,'ratings':ratings}
   # return render(request,'review.html',context)
   return render(request,'single_project.html',context)
+
+class ProjectList(APIView):
+  def get(self, request, format=None):
+    all_projects = Project.objects.all()
+    serializers = ProjectsSerializer(all_projects,many=True)
+    return Response(serializers.data)
+  
+class RatingList(APIView):
+  def get(self,request,format=None):
+    all_ratings = Rating.objects.all()
+    serializers = RatingSerializer(all_ratings,many=True)
+    return Response(serializers.data)
