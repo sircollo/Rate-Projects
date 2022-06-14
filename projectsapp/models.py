@@ -54,7 +54,7 @@ class Project(models.Model):
     choices= LANGUAGES,
     default= 'HTML'
   )
-  poster = cloudinary.models.CloudinaryField('image',default='image')
+  poster = CloudinaryField('image',default='image')
   upload_date = models.DateTimeField(auto_now_add=True)
   category = models.ManyToManyField(Category, related_name='projects')
   user = models.ForeignKey(Profile, on_delete=models.CASCADE,null=True,related_name='project')
