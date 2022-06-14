@@ -82,7 +82,7 @@ def profile(request,id):
   # url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
   response = requests.get(url)
   profile = response.json()
-  print(profile)
+  # print(profile)
   context = {'profile':profile,'projects':projects}
   return render(request, 'profile.html', context)
       
@@ -101,7 +101,7 @@ def uploadProject(request,id):
   profile = Profile.objects.get(user=id)
   user = request.user
   u_form = ProjectUploadForm(request.POST,request.FILES)
-  print('no')
+  # print('no')
   if request.method == 'POST':
     if u_form.is_valid():    
       name = u_form.cleaned_data.get('name') 
@@ -131,7 +131,7 @@ class ProfileList(APIView):
   def get(self, request, format=None):
     all_profiles = Profile.objects.all()
     serializers = ProfileSerializer(all_profiles, many=True)
-    print(serializers.data)
+    # print(serializers.data)
     profiles = serializers.data
     # return render(request, 'index.html',{'profiles':profiles})
     return Response(serializers.data)
@@ -229,8 +229,8 @@ class ProjectDetail(APIView):
     project = self.get_project(pk)
     serializers = ProjectsSerializer(project)
     response = serializers.data
-    print(response)
-    print(rating_response)
+    # print(response)
+    # print(rating_response)
     context = {'response': response,'rating_responses':rating_response}
     
     # return Response(serializers.data,status=status.HTTP_200_OK)
