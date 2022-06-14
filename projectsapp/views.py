@@ -215,13 +215,23 @@ class ProjectDetail(APIView):
       return Project.objects.get(pk=pk)
     except Project.DoesNotExist:
       return Http404
+  def get_rating(self,pk):
+    try:
+      return Rating.objects.get(pk=pk)
+    except Rating.DoesNotExist:
+      return Http404
     
   def get(self, request, pk, format=None):
+    rating = self.get_rating(pk)
+    serializers_rating = RatingSerializer(rating)
+    rating_response = serializers_rating.data
+    
     project = self.get_project(pk)
     serializers = ProjectsSerializer(project)
     response = serializers.data
     print(response)
-    context = {'response': response}
+    print(rating_response)
+    context = {'response': response,'rating_responses':rating_response}
     
     # return Response(serializers.data,status=status.HTTP_200_OK)
     return render(request,'project_details.html',context)
