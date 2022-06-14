@@ -18,14 +18,12 @@ import requests
 # Create your views here.
 
 def home(request):
-  projects = Project.objects.all()
-  ratings = Rating.objects.all()
   url = 'http://127.0.0.1:8000/api/projects/'
   response = requests.get(url)
   projects = response.json()
-  print(projects)
+
   # projects = request.get('127.0.0.1/api/profiles/').json()
-  context = {'projects':projects,'ratings':ratings}
+  context = {'projects':projects}
   return render(request, 'index.html',context)
 
 def signup(request):
@@ -74,9 +72,16 @@ class CreateProfileView(CreateView):
     return super().form_valid(form)
   
 def profile(request,id):
+  
   user = request.user
+  
   profiles=Profile.objects.get(user=id)
-  context = {'profiles':profiles}
+  projects = Project.objects.filter(user=profiles)
+  url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
+  response = requests.get(url)
+  profile = response.json()
+  print(profile)
+  context = {'profile':profile,'projects':projects}
   return render(request, 'profile.html', context)
       
 
@@ -136,6 +141,29 @@ class ProfileList(APIView):
       serializers.save()
       return Response(serializers.data,status=status.HTTP_201_OK)
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+  
+class ProfileDetails(APIView):
+  def get_profile(self,pk):
+    try:
+      return Profile.objects.get(pk=pk)
+    except Profile.DoesNotExist:
+      return Http404
+    
+  def get(self, request, pk, format=None):
+    profile = self.get_profile(pk)
+    serializers = ProfileSerializer(profile)
+    return Response(serializers.data,status=status.HTTP_200_OK)
+    
+  # permission_classes = (IsAdminOrReadOnly,)
+  def put(self, request, pk, format=None):
+    profile = self.get_project(pk)
+    serializers = ProfileSerializer(profile,request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_200_OK)
+    else:
+      return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
+  
 
 
 def review(request,id):
@@ -177,6 +205,9 @@ class ProjectList(APIView):
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class ProjectDetail(APIView): 
+  template_name = 'project_details.html'
+  class Meta:
+    template_name = 'project_details.html'
   def get_project(self,pk):
     try:
       return Project.objects.get(pk=pk)
@@ -186,7 +217,12 @@ class ProjectDetail(APIView):
   def get(self, request, pk, format=None):
     project = self.get_project(pk)
     serializers = ProjectsSerializer(project)
-    return Response(serializers.data,status=status.HTTP_200_OK)
+    response = serializers.data
+    print(response)
+    context = {'response': response}
+    
+    # return Response(serializers.data,status=status.HTTP_200_OK)
+    return render(request,'project_details.html',context)
   # permission_classes = (IsAdminOrReadOnly,)
   def put(self, request, pk, format=None):
     project = self.get_project(pk)
@@ -207,3 +243,4 @@ class RatingList(APIView):
     all_ratings = Rating.objects.all()
     serializers = RatingSerializer(all_ratings,many=True)
     return Response(serializers.data)
+  
