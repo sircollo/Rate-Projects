@@ -168,11 +168,11 @@ class ProfileDetails(APIView):
   
 
 
-def review(request,id):
+def reviews(request,pk):
   user = request.user
   # profiles = Profile.objects.get(user=id)
   # print(profiles)
-  project = Project.objects.get(id=id)
+  project = Project.objects.get(id=pk)
   user = Profile.objects.get(user=user)
   ratings = Rating.objects.get(project=project)
   form = ProjectRatingForm(request.POST)

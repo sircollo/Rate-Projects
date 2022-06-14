@@ -16,7 +16,7 @@ urlpatterns = [
     path('search/', search_user.as_view(), name='search'),
     url('^api/profiles/', views.ProfileList.as_view(), name='api-profiles'),
     url(r'^api-token-auth/', obtain_auth_token),
-    url('review/(\d+)', views.review, name='review'),
+    url('review/(\d+)', views.reviews, name='reviews'),
     url('^api/projects/', views.ProjectList.as_view(), name='api-projects'),
     url('^api/ratings/', views.RatingList.as_view(), name='ratings'),
     url('^api/project/(\d+)/', views.ProjectDetail.as_view(), name='details'),

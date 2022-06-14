@@ -43,6 +43,13 @@ h1{
   font-size: 50px;
   /* color: black; */
 }
+/* <style>
+    .card{
+        background: url("https://images.pexels.com/photos/326503/pexels-photo-326503.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style> */
 .main-section{
   position: relative;
   background: url("https://images.pexels.com/photos/326503/pexels-photo-326503.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
