@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+<div class="flex-r container py-2">
+    <div class="flex-r login-wrapper">
+      <div class="login-text ">
+        <h1 class="text-center">Sign Up</h1>
+        <p>Sign up to upload projects and rate projects</p>
+        <form class="flex-c" method="POST">
+          {% csrf_token %}
+          <div class="input-box">
+            <span class="label">Username</span>
+            <div class=" flex-r input">
+              <i class="fas fa-user-circle"></i>
+              {{ form.username}}
+            </div>
+          </div>
+          <div class="input-box">
+            <span class="label">Password</span>
+            <div class="flex-r input">
+              <i class="fas fa-at"></i>
+              {{ form.email}}
+            </div>
+          </div>
+          <div class="input-box">
+            <span class="label">Password</span>
+            <div class="flex-r input">
+              <i class="fas fa-lock"></i>
+              {{ form.password1}}
+            </div>
+          </div>
+          <div class="input-box">
+            <span class="label">Password</span>
+            <div class="flex-r input">
+              <i class="fas fa-lock"></i>
+              {{ form.password2}}              
+            </div>
+          </div>
+          <input class="btn1 btn-dark" type="submit" value="Sign Up">
+          <span class="extra-line">
+            <span>Already have an account?</span>
+            <a href="{% url 'signin' %}">Sign In</a>
+          </span>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock%}
+
+
+
+
+
