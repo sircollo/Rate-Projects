@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/details.css' %}">
+<div class="container">
+  <div class="col-md-12 py-2">
+    <img src="https://res.cloudinary.com/dtqnkzj6q/{{response.poster}}" alt="" srcset="" width="100%" height="500px" style="background-repeat: no-repeat;"">
+  </div>
+  
+  <div class="col-md-12">
+    <hr class="ratings" style="border:3px solid #f1f1f1">
+    <div class="comments text-white">
+      <p class="headin">Project:  {{ response.name}}</p>
+      <p class="headin">Description: {{ response.description }}</p>
+      <p class="headin">Preview: {{ response.url}}</p>
+      <p class="headin">Category: {{ response.url}}</p>
+    </div>
+  </div>
+  <hr>
+  <div class="col-md12 text-white" >
+    <div class="ratings p-4">
+    <span class="heading">User Rating</span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <!-- <p>4.1 average based on 254 reviews.</p> -->
+    <hr style="border:3px solid #f1f1f1">
+
+    <div class="row">
+      <div class="side">
+        <div>Design</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-{{response.design_average|floatformat:0}}"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>{{response.design_average|floatformat:0}}</div>
+      </div>
+      <div class="side">
+        <div>Usability</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-{{response.usability_average|floatformat:0}}"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>{{response.usability_average|floatformat:0}}</div>
+      </div>
+      <div class="side">
+        <div>Content</div>
+      </div>
+      <div class="middle">
+        <div class="bar-container">
+          <div class="bar-{{response.content_average|floatformat:0}}"></div>
+        </div>
+      </div>
+      <div class="side right">
+        <div>{{response.content_average|floatformat:0}}</div>
+      </div>
+    </div>
+    </div>
+  </div>
+    <div class="col-md-12">
+      <div class="comments text-white">
+        <span class="heading">Comments</span>
+        <hr style="border:3px solid #f1f1f1">
+      </div>
+    </div>
+    </div>
+
+{% endblock %}
