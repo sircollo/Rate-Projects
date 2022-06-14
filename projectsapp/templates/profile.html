@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-4 text-center py-3">
+            <div class="profile-sidebar">
+                <div class="profile-userpic">
+                    <img src="https://res.cloudinary.com/dtqnkzj6q/{{profile.avatar}}"
+                        class="img-responsive" alt="" width="100" height="100">
+                </div>
+                <div class="profile-usertitle ">
+                    <div class="profile-usertitle-nam">
+                       <h2>{{profile.name}}</h2> 
+                       <p>{{user.username}}, {{profile.country}}</p>
+                       <p>{{user.email}}</p>
+                    </div>
+                </div>
+                <div class="profile-usertitle ">
+                    <div class="profile-usertitle-nam">
+                       <p>{{user.username}}</p>
+                    </div>
+                    <div class="profile-usertitle-jo">
+                      <button type="submit" class="btn btn-dark btn-lg">Edit Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h4 class="text-center text-white">Projects Uploaded</h4> 
+            <hr>
+            <div class="container">
+                <div class="row">
+                    {% for project in projects %}
+                    <div class="col-md-5 ml-2 mt-2" style="height:13rem;">
+                        
+                        <div class="card p-0" style="width: 18rem; height:13rem;">
+                            <div class="card-body">
+                                <a href="{% url 'details' project.id %}"> <img src="https://res.cloudinary.com/dtqnkzj6q/{{project.poster}}" alt="imga" srcset="" width="100%" height="100%"></a>
+                              <p class="card-text">{{project.design_average}}</p>
+                              <button class="btn btn-danger">Delete</button>
+                            </div>
+                          </div>                       
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+
+{% endblock %}
