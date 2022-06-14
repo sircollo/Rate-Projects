@@ -20,6 +20,7 @@ urlpatterns = [
     url('^api/projects/', views.ProjectList.as_view(), name='api-projects'),
     url('^api/ratings/', views.RatingList.as_view(), name='ratings'),
     url('^api/project/(\d+)/', views.ProjectDetail.as_view(), name='details'),
+    url('^api/profile/(\d+)/', views.ProfileDetails.as_view(), name='profiles'),
     
 ]
 if settings.DEBUG:
