@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+<div class="flex-r container py-2">
+    <div class="flex-r login-wrapper">
+      <div class="login-text">
+        <div class="logo">
+          <span>Rate Projects</span>
+        </div>
+        <h1>Sign In</h1>
+        <p>Sign in to access all the features of the application</p>
+        <form class="flex-c" method="POST">
+          {% csrf_token %}
+          <div class="input-box">
+            <span class="label">Username</span>
+            <div class=" flex-r input">
+              <i class="fas fa-user-circle"></i>
+              {{ form.username}}
+            </div>
+          </div>
+
+          <div class="input-box">
+            <span class="label">Password</span>
+            <div class="flex-r input">
+              <i class="fas fa-lock"></i>
+              {{ form.password}}
+            </div>
+          </div>
+          <input class="btn1 btn-primary" type="submit" value="Sign In">
+          <span class="extra-line">
+            <span>Don't have an account?</span>
+            <a href="{% url 'signup' %}">Sign Up</a>
+          </span>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+
+
+
+
+
+
+{% endblock %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 pt-4 text-light">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          {{ form.username}}
+        </div>
+        <div class="form-group">
+          {{ form.password}}
+        </div>        
+        <input type="submit" value="Sign In">
+      </form>
+
+    </div>
+  </div>
+</div>
