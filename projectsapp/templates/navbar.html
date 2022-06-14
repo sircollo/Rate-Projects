@@ -12,9 +12,11 @@
      <div class="collapse navbar-collapse navbar-collapse justify-content-md-end" id="navbarsExampleCenteredNav">
         <ul class="navbar-nav">
           <li>
+            {% if user.is_authenticated %}
             <form class="form-inline navbar-form py-1"action="{% url 'search' %}" method="GET"  id="navBarSearchForm">
               <input class="form-control" name="search_user" type="search" placeholder="Search" aria-label="Search" style="width: 500px;border-radius: 10px;height:30px;">
             </form>
+            {% endif %}
           </li>
           <li class="nav-item py-0">
             <a class="nav-link text-white" href="{% url 'index' %}">Home</a>

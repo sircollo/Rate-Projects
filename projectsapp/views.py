@@ -15,11 +15,14 @@ from .serializer import *
 from rest_framework import status
 from .permissions import IsAdminOrReadOnly
 import requests
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 def home(request):
-  # url = 'http://127.0.0.1:8000/api/projects/'
-  url = 'https://ratemyprojects.herokuapp.com/api/projects/'
+  url = 'http://127.0.0.1:8000/api/projects/'
+  # url = 'https://ratemyprojects.herokuapp.com/api/projects/'
   response = requests.get(url)
   projects = response.json()
 
@@ -63,6 +66,7 @@ class SignOutView(View):
     # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return redirect('index')
   
+
 class CreateProfileView(CreateView):
   model = Profile
   form_class = CreateProfileForm
@@ -72,21 +76,22 @@ class CreateProfileView(CreateView):
     form.instance.user = self.request.user
     return super().form_valid(form)
   
+@login_required(login_url='/signin/')
 def profile(request,id):
   
   user = request.user
   
   profiles=Profile.objects.get(user=id)
   projects = Project.objects.filter(user=profiles)
-  # url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
-  url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
+  url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
+  # url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
   response = requests.get(url)
   profile = response.json()
   # print(profile)
   context = {'profile':profile,'projects':projects}
   return render(request, 'profile.html', context)
       
-
+@login_required(login_url='/')
 def updateProfile(request,id):
   profile = Profile.objects.get(user=id)
   form = UpdateProfileForm(request.POST,request.FILES,instance=profile)
@@ -96,7 +101,7 @@ def updateProfile(request,id):
       return redirect('profile',id)
   context = {'form':form}
   return render(request,'update_profile.html',context)
-
+@login_required(login_url='/')
 def uploadProject(request,id):
   profile = Profile.objects.get(user=id)
   user = request.user
@@ -118,6 +123,7 @@ class search_user(ListView):
   model= User,Profile
   template_name = 'user_search.html'
   
+
   def get_queryset(self):
     query = self.request.GET.get('search_user')
     object_list = User.objects.filter(
@@ -167,7 +173,7 @@ class ProfileDetails(APIView):
       return Response(serializers.data,status=status.HTTP_400_BAD_REQUEST)
   
 
-
+@login_required(login_url='/signin/')
 def reviews(request,pk):
   user = request.user
   # profiles = Profile.objects.get(user=id)
@@ -194,6 +200,7 @@ def reviews(request,pk):
 
 class ProjectList(APIView):
   # permission_classes = (IsAdminOrReadOnly,)
+  
   def get(self, request, format=None):
     all_projects = Project.objects.all()
     serializers = ProjectsSerializer(all_projects,many=True)
@@ -205,11 +212,13 @@ class ProjectList(APIView):
       serializers.save()
       return Response(serializers.data,status=status.HTTP_200_OK)
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+ 
 
 class ProjectDetail(APIView): 
   template_name = 'project_details.html'
   class Meta:
     template_name = 'project_details.html'
+  # @login_required(login_url='/signin/')
   def get_project(self,pk):
     try:
       return Project.objects.get(pk=pk)
