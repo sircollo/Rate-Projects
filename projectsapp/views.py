@@ -18,8 +18,8 @@ import requests
 # Create your views here.
 
 def home(request):
-  # url = 'http://127.0.0.1:8000/api/projects/'
-  url = 'https://ratemyprojects.herokuapp.com/api/projects/'
+  url = 'http://127.0.0.1:8000/api/projects/'
+  # url = 'https://ratemyprojects.herokuapp.com/api/projects/'
   response = requests.get(url)
   projects = response.json()
 
@@ -78,8 +78,8 @@ def profile(request,id):
   
   profiles=Profile.objects.get(user=id)
   projects = Project.objects.filter(user=profiles)
-  # url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
-  url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
+  url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
+  # url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
   response = requests.get(url)
   profile = response.json()
   print(profile)
@@ -174,7 +174,7 @@ def reviews(request,pk):
   # print(profiles)
   project = Project.objects.get(id=pk)
   user = Profile.objects.get(user=user)
-  ratings = Rating.objects.get(project=project)
+  ratings = Rating.objects.filter(id=project.id)
   form = ProjectRatingForm(request.POST)
   if request.method == 'POST':
     if form.is_valid():
@@ -182,9 +182,9 @@ def reviews(request,pk):
       usability = form.cleaned_data['usability']
       content = form.cleaned_data['content']
       comment = form.cleaned_data['comment']  
-      da = float(design)
-      x = (da/10)    
-      new_rating = Rating(design=design,usability=usability,content=content,comment=comment,user=user,project=project,design_average=x)
+      # da = float(design)
+      # x = (da/10)    
+      new_rating = Rating(design=design,usability=usability,content=content,comment=comment,user=user,project=project)
       new_rating.save()
       
       return redirect('index')

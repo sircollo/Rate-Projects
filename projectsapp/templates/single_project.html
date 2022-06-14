@@ -1,22 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container-fluid py-3">
-  <div class="row">
+
+<div class="container py-3">
     <div class="col-md-12 p-4">
       <img src="{{project.poster.url}}" alt="" srcset="" width="100%" height="400px" style="display: no-repeat;">
     </div>
-    <h2>Rating{{ratings.design_count}}</h2>
-    <div class="col-md-6 text-center mt-4 p-3">
+    
+    <div class="col-md-12 text-center mt-4 p-3">
+      <h2 class="text-white">Review and Rate - {{project.name}}</h2>
+      <hr style="border: 1px solid #f1f1f1">
       <form method="POST">
         {% csrf_token %}
         <div class="form-group">
-          {{form.design}} {{form.design}}
+          <table class="text-center" style="width:100%">
+            <tr >
+              <th  class="text-center"style="color:red">Design</th>
+              <th  class="text-center"style="color:yellow">Usability</th>
+              <th  class="text-center"style="color:green">Content</th>
+            </tr>
+            <tr>
+              <td>{{form.design}}</td>
+              <td>{{form.usability}}</td>
+              <td>{{form.content}}</td>
+            </tr>
+          </table>
         </div>
         <div class="form-group">
           {{form.comment}}
         </div>
-         
-         <input type="submit" value="Submit">
+        <div class="form-group align-right">
+          <input type="submit"class="btn btn-primary" value="Submit">
+        </div>
       </form>
     </div>
   </div>  
