@@ -1,6 +1,41 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
 
 {% block content %}
-
-<h1 class="text-center">Index page </h1>
+{% load cloudinary %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="container-fluid main-section">
+  <div class="row">
+  <div class="offset-lg-2 col-lg-8 section-part text-center">
+  <h1 style="color: #ca4d4d;">Project Rater</h1>
+  <P class="hero-text" style="color: #ca4d4d;">Preview, Comment and Rate</P>
+ <a href=""><button class="btn btn-danger">Upload Project</button></a> 
+  </div>
+  </div>
+  <i class="fa fa-angle-double-down blink" aria-hidden="true"></i>
+  </div>
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+  <div class="container-fluid py-4">
+    <main class="grid">
+      {% for project in projects %}
+      <article>
+        <a href="{% url 'details' project.id %}"> <img src="https://res.cloudinary.com/dtqnkzj6q/{{project.poster}}" alt="" height="250" width="300%"> </a>
+        <div class="text-block">
+          <h6>{{project.name}}</h6>
+          <div class="bar-container">
+            Design<div class="bar-{{project.design_average|floatformat:0}}"></div>
+          </div>
+          <div class="bar-container">
+            Usability<div class="bar-{{project.usability_average|floatformat:0}}"></div>
+          </div>
+          <div class="bar-container">
+            Content<div class="bar-{{project.content_average|floatformat:0}} mb-2"></div>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </main>
+  </div>
+ 
 {% endblock %}
