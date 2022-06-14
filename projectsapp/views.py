@@ -18,8 +18,8 @@ import requests
 # Create your views here.
 
 def home(request):
-  # url = 'http://127.0.0.1:8000/api/projects/'
-  url = 'https://ratemyprojects.herokuapp.com/api/projects/'
+  url = 'http://127.0.0.1:8000/api/projects/'
+  # url = 'https://ratemyprojects.herokuapp.com/api/projects/'
   response = requests.get(url)
   projects = response.json()
 
@@ -78,8 +78,8 @@ def profile(request,id):
   
   profiles=Profile.objects.get(user=id)
   projects = Project.objects.filter(user=profiles)
-  # url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
-  url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
+  url = 'http://127.0.0.1:8000/api/profile/{}'.format(id)
+  # url = 'https://ratemyprojects.herokuapp.com/api/profile/{}'.format(id)
   response = requests.get(url)
   profile = response.json()
   print(profile)
